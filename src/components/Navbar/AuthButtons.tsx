@@ -1,13 +1,15 @@
+import { Link } from 'react-router'
+
 const AuthButtons = () => {
     return (
         <div className="py-4 flex justify-center items-center gap-4 flex-wrap">
-            <button className="btn btn-neutral btn-outline">
+            <Link to="/register" className="btn btn-neutral btn-outline">
                 Crear cuenta
-            </button>
+            </Link>
             <div className="hidden lg:block">|</div>
-            <button className="btn btn-neutral btn-outline">
+            <Link to="/login" className="btn btn-neutral btn-outline">
                 Iniciar sesión
-            </button>
+            </Link>
         </div>
     )
 }

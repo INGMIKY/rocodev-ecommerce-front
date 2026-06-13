@@ -1,6 +1,7 @@
 import Cart from './Cart'
 import AuthButtons from './AuthButtons'
 import UserDropDown from './UserDropDown'
+import { Link } from 'react-router'
 
 const Navbar = () => {
     return (
@@ -8,9 +9,9 @@ const Navbar = () => {
             <AuthButtons />
             <nav className="navbar bg-base-100 shadow-sm lg:rounded-box w-full">
                 <div className="navbar-start">
-                    <a className="btn btn-ghost text-xl" href="/">
+                    <Link to="/" className="btn btn-ghost text-xl">
                         E-commerce
-                    </a>
+                    </Link>
                 </div>
                 <div className="navbar-end gap-3">
                     <a href="" className="btn btn-primary">
