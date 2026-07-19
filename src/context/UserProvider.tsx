@@ -2,24 +2,25 @@ import { useState, useEffect } from 'react'
 import { UserContext } from './UserContext'
 import type { ReactNode } from 'react'
 import type { UserInfo } from '../types/user'
+import { getProfileService } from '../services/authServices'
 
 type UserContextProviderProps = {
     children: ReactNode
 }
 
 const UserContextProvider = ({ children }: UserContextProviderProps) => {
-    const [userInfo, setUserInfo] = useState<UserInfo | null>()
+    const [userInfo, setUserInfo] = useState<UserInfo | null>(null)
     const [loading, setLoading] = useState(true)
 
     // Función para verificar la sesión del usuario
     const checkSession = async () => {
         try {
             setLoading(true)
-            // const userData = await getProfileService()
-            // setUsetInfo(userData)
+            const userData = await getProfileService()
+            setUserInfo(userData)
         } catch (error) {
             console.log('No hay sesión activa', error)
-            setUserInfo({})
+            setUserInfo(null)
         } finally {
             setLoading(false)
         }

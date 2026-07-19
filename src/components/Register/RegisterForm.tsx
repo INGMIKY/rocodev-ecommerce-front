@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import type { AuthFormValues } from '../../types/auth'
 import { registerService } from '../../services/authServices'
+import { useUser } from '../../hooks/useUser'
 
 const RegisterForm = () => {
     const {
@@ -13,6 +14,8 @@ const RegisterForm = () => {
     } = useForm<AuthFormValues>({
         mode: 'onChange', //validacion en tiempo real
     })
+
+    const { userInfo } = useUser()
 
     // Estado para mostrar contrasenia u ocultar
     const [showPassword, setShowPassword] = useState(true)
