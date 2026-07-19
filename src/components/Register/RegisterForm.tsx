@@ -4,6 +4,8 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import type { AuthFormValues } from '../../types/auth'
 import { registerService } from '../../services/authServices'
 import { useUser } from '../../hooks/useUser'
+import { Navigate } from 'react-router'
+import toast from 'react-hot-toast'
 
 const RegisterForm = () => {
     const {
@@ -15,16 +17,34 @@ const RegisterForm = () => {
         mode: 'onChange', //validacion en tiempo real
     })
 
-    const { userInfo } = useUser()
+    const { userInfo, checkSession } = useUser()
 
     // Estado para mostrar contrasenia u ocultar
-    const [showPassword, setShowPassword] = useState(true)
+    const [showPassword, setShowPassword] = useState(false)
+    const [redirect, setRedirect] = useState(false)
 
-    const onSubmit = (data: AuthFormValues) => {
+    const onSubmit = async (data: AuthFormValues) => {
         // Registrando al usuario
-        registerService(data, reset)
+        const result = await registerService(
+            data,
+            reset,
+            setRedirect,
+            checkSession,
+        )
+
+        if (result?.message) {
+            toast.success('Registro exítoso')
+        } else {
+            toast.error('Error, intente más tarde')
+        }
     }
 
+    if (redirect && userInfo?.isAdmin) {
+        // Llevarlo a la pagina admin
+    }
+    if (redirect && !userInfo?.isAdmin) {
+        return <Navigate to={'/'} />
+    }
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}

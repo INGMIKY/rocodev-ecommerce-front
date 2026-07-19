@@ -14,7 +14,9 @@ export const getProfileService = async () => {
         return response.data
     } catch (error) {
         console.log(error)
-        throw new Error('Error al obtener el perfil')
+        throw new Error('Error al obtener el perfil', {
+            cause: error,
+        })
     }
 }
 
@@ -34,12 +36,20 @@ export const registerService = async (
 
         console.log('RESPUESTA:', response)
         if (response.status === 201 || response.status === 200) {
-            alert('REGISTRO EXISTOSO DEL USUARIO')
+            // Verificar la sesión real del servidor después del registro
+            await checkSession()
             reset()
+            setRedirect(true)
+
+            return {
+                message: true,
+            }
         }
     } catch (error) {
-        alert('Error al registrarse')
         console.log(error)
+        return {
+            message: false,
+        }
     }
 }
 
