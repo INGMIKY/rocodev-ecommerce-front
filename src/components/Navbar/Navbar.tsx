@@ -2,8 +2,13 @@ import Cart from './Cart'
 import AuthButtons from './AuthButtons'
 import UserDropDown from './UserDropDown'
 import { Link } from 'react-router'
+import { useUser } from '../../hooks/useUser'
 
 const Navbar = () => {
+    const { loading, userInfo } = useUser()
+
+    // console.log(userInfo)
+    // console.log(loading)
     return (
         <header>
             <AuthButtons />
@@ -14,11 +19,13 @@ const Navbar = () => {
                     </Link>
                 </div>
                 <div className="navbar-end gap-3">
-                    <a href="" className="btn btn-primary">
-                        Dashboard
-                    </a>
+                    {userInfo?.isAdmin && (
+                        <a href="" className="btn btn-primary">
+                            Dashboard
+                        </a>
+                    )}
                     <Cart />
-                    <UserDropDown />
+                    {!loading && userInfo?.username && <UserDropDown />}
                 </div>
             </nav>
         </header>

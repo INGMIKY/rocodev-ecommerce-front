@@ -1,6 +1,12 @@
 import axios from 'axios'
-import type { AuthFormValues } from '../types/auth'
+import type { AuthFormValues, AuthFormValuesLogin } from '../types/auth'
 import type { UseFormReset } from 'react-hook-form'
+import type { UserInfo, UserContextType } from '../types/user'
+
+type LoginResult = {
+    success: boolean
+    message: string
+}
 
 const API_URL = import.meta.env.VITE_BACKEND_URL + '/auth'
 // http://localhost:3001/api/auth
@@ -20,7 +26,37 @@ export const getProfileService = async () => {
     }
 }
 
-export const loginService = async () => {}
+export const loginService = async (
+    data: AuthFormValuesLogin,
+    reset: UseFormReset<AuthFormValuesLogin>,
+    setRedirect: (value: boolean) => void,
+    setUserInfo: UserContextType['setUserInfo'],
+): Promise<LoginResult> => {
+    try {
+        const response = await axios.post<UserInfo>(`${API_URL}/login`, data, {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: true, //para que viaje el token
+        })
+
+        //Comprobar si la respuesta es existosa
+        // if (response.status === 200) {
+        setUserInfo(response.data)
+        reset()
+        setRedirect(true)
+
+        return {
+            success: true,
+            message: 'Inicio de sesión éxitoso',
+        }
+        // }
+    } catch (error) {
+        console.log('Error al logearse', error)
+        return {
+            success: false,
+            message: 'Error al logearse',
+        }
+    }
+}
 
 export const registerService = async (
     data: AuthFormValues,

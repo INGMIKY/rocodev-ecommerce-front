@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import type { AuthFormValues } from '../../types/auth'
+import type { AuthFormValuesLogin } from '../../types/auth'
+import { loginService } from '../../services/authServices'
+import { useUser } from '../../hooks/useUser'
+import toast from 'react-hot-toast'
+import { Navigate } from 'react-router'
 
 const LoginForm = () => {
     const {
@@ -9,21 +13,33 @@ const LoginForm = () => {
         handleSubmit,
         formState: { errors },
         reset,
-    } = useForm<AuthFormValues>({
+    } = useForm<AuthFormValuesLogin>({
         mode: 'onChange', //validacion en tiempo real
     })
 
+    const { setUserInfo, userInfo } = useUser()
     // Estado para mostrar contrasenia u ocultar
     const [showPassword, setShowPassword] = useState(true)
+    const [redirect, setRedirect] = useState(false)
 
-    const onSubmit = (data: AuthFormValues) => {
+    const onSubmit = async (data: AuthFormValuesLogin) => {
         // Logueando al usuario
-        console.log(data)
+        const result = await loginService(data, reset, setRedirect, setUserInfo)
 
-        // Una vez registrado el usuario, se reseteara el formulario
-        reset()
+        if (result.success) {
+            toast.success(result.message)
+        } else {
+            toast.error(result.message)
+        }
     }
 
+    if (redirect && userInfo?.isAdmin) {
+        // return <Navigate to={''} />
+    }
+
+    if (redirect && !userInfo?.isAdmin) {
+        return <Navigate to={'/'} />
+    }
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
