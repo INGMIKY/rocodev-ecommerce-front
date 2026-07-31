@@ -19,7 +19,7 @@ const LoginForm = () => {
 
     const { setUserInfo, userInfo } = useUser()
     // Estado para mostrar contrasenia u ocultar
-    const [showPassword, setShowPassword] = useState(true)
+    const [showPassword, setShowPassword] = useState(false)
     const [redirect, setRedirect] = useState(false)
 
     const onSubmit = async (data: AuthFormValuesLogin) => {
